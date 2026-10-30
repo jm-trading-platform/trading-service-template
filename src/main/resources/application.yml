@@ -1,4 +1,15 @@
 spring:
+  datasource:
+      url: jdbc:postgresql://localhost:5432/auth_db
+      username: trading
+      password: trading
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: false
 
   application:
     name: trading-service-template
@@ -8,10 +19,10 @@ spring:
     consumer:
       group-id: trading-group
     producer:
-      backs: all
+      acks: all
 
 
-spring doc:
+springdoc:
   api-docs:
     path: /api-docs
 
