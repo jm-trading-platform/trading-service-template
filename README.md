@@ -35,3 +35,31 @@ bootstrap/
 Consultar:
 
 trading-docs/architecture
+
+
+Crear DTO de evento
+```JAVA
+public record HealthEvent(
+        String id,
+        String timestamp,
+        String status) {
+}
+
+````
+
+## Esto deja preparado:
+
+- UserCreatedEvent
+- OrderCreatedEvent
+- PositionOpenedEvent
+- PortfolioUpdatedEvent
+
+## Topics:
+
+auth.user.created
+auth.user.deleted
+trading.order.created
+trading.order.executed
+portfolio.updated
+
+
