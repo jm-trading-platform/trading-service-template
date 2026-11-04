@@ -1,12 +1,17 @@
 name: Build
 
 on:
+
   push:
     branches:
       - main
       - develop
       - feature/**
+
   pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
 
@@ -28,27 +33,29 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
       - name: Configure Maven Settings
         run: |
           mkdir -p ~/.m2
 
-          cat > ~/.m2/settings.xml <<EOF
+          cat > ~/.m2/settings.xml << EOF
           <settings>
-              <servers>
-                  <server>
-                      <id>github</id>
-                      <username>josetelopez</username>
-                      <password>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</password>
-                  </server>
-              </servers>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>josetelopez</username>
+                <password>${{ secrets.MAVEN_TOKEN }}</password>
+              </server>
+            </servers>
           </settings>
           EOF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Give execute permissions
-        run: chmod +x mvnw
-
-      - name: Build
-        run: ./mvnw clean verify
+      - name: Maven Verify
+        run: |
+          chmod +x mvnw
+          ./mvnw clean verify -U
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
