@@ -44,24 +44,25 @@ jobs:
               <server>
                 <id>github</id>
                 <username>${GITHUB_ACTOR}</username>
-                <password>${GITHUB_TOKEN}</password>
+                <password>${PACKAGES_TOKEN}</password>
               </server>
             </servers>
           </settings>
           EOF
-
-          echo "===== settings.xml ====="
-          cat ~/.m2/settings.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Verify Parent Resolution
-        run: |
-          cat pom.xml
-
-      - name: Maven Verify
+      - name: Verify Parent Package Access
         run: |
           chmod +x mvnw
+          ./mvnw dependency:get \
+            -Dartifact=com.jmtrading:trading-parent:1.1.0 \
+            -U
+        env:
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+
+      - name: Build
+        run: |
           ./mvnw clean verify -U
         env:
-          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
