@@ -39,10 +39,10 @@ jobs:
           PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
         run: |
           if [ -z "$PACKAGES_TOKEN" ]; then
-            echo "ERROR: PACKAGES_TOKEN no configurado"
+            echo "TOKEN VACIO"
             exit 1
           else
-            echo "PACKAGES_TOKEN disponible"
+            echo "TOKEN INFORMADO"
           fi
 
       - name: Create Maven Settings
