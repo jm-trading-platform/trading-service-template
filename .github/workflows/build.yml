@@ -1,7 +1,6 @@
 name: Build
 
 on:
-
   push:
     branches:
       - main
@@ -39,23 +38,30 @@ jobs:
         run: |
           mkdir -p ~/.m2
 
-          cat > ~/.m2/settings.xml << EOF
+          cat > ~/.m2/settings.xml <<EOF
           <settings>
             <servers>
               <server>
                 <id>github</id>
-                <username>josetelopez</username>
-                <password>${{ secrets.MAVEN_TOKEN }}</password>
+                <username>${GITHUB_ACTOR}</username>
+                <password>${GITHUB_TOKEN}</password>
               </server>
             </servers>
           </settings>
           EOF
+
+          echo "===== settings.xml ====="
+          cat ~/.m2/settings.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+
+      - name: Verify Parent Resolution
+        run: |
+          cat pom.xml
 
       - name: Maven Verify
         run: |
           chmod +x mvnw
           ./mvnw clean verify -U
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
