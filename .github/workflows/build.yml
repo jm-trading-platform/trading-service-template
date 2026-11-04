@@ -98,10 +98,8 @@ jobs:
       - name: Verify Parent Resolution
         run: |
           chmod +x mvnw
-          ./mvnw dependency:get \
-            -Dartifact=com.jmtrading:trading-parent:pom:1.1.0 \
-            -U
-
+          ./mvnw dependency:get -Dartifact=com.jmtrading:trading-parent:1.1.0:pom -U
+          
       - name: Build
         run: |
           ./mvnw clean verify -U
