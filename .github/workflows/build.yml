@@ -33,6 +33,10 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
+          server-username: GITHUB_ACTOR
+          server-password: PACKAGES_TOKEN
+        env:
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
       - name: Check Secret
         env:
