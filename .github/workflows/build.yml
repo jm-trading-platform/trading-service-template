@@ -33,23 +33,8 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
-          server-username: GITHUB_ACTOR
-          server-password: PACKAGES_TOKEN
-        env:
-          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Check Secret
-        env:
-          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
-        run: |
-          if [ -z "$PACKAGES_TOKEN" ]; then
-            echo "TOKEN VACIO"
-            exit 1
-          else
-            echo "TOKEN INFORMADO"
-          fi
-
-      - name: Create Maven Settings
+      - name: Configure Maven Settings
         env:
           PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -58,6 +43,7 @@ jobs:
 
           cat > ~/.m2/settings.xml <<EOF
           <settings>
+
             <servers>
               <server>
                 <id>github</id>
@@ -65,20 +51,55 @@ jobs:
                 <password>${PACKAGES_TOKEN}</password>
               </server>
             </servers>
+
+            <profiles>
+              <profile>
+                <id>github-packages</id>
+
+                <repositories>
+
+                  <repository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/jm-trading-platform/trading-parent</url>
+                    <releases>
+                      <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                      <enabled>true</enabled>
+                    </snapshots>
+                  </repository>
+
+                  <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                  </repository>
+
+                </repositories>
+
+                <pluginRepositories>
+
+                  <pluginRepository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                  </pluginRepository>
+
+                </pluginRepositories>
+
+              </profile>
+            </profiles>
+
+            <activeProfiles>
+              <activeProfile>github-packages</activeProfile>
+            </activeProfiles>
+
           </settings>
           EOF
 
-      - name: Show Maven Settings
-        run: |
-          cat ~/.m2/settings.xml | sed 's/<password>.*<\/password>/<password>***<\/password>/'
-
-      - name: Verify Parent Access
+      - name: Verify Parent Resolution
         run: |
           chmod +x mvnw
-
           ./mvnw dependency:get \
-            -Dartifact=com.jmtrading:trading-parent:1.1.0 \
-            -DremoteRepositories=github::default::https://maven.pkg.github.com/jm-trading-platform/trading-parent \
+            -Dartifact=com.jmtrading:trading-parent:pom:1.1.0 \
             -U
 
       - name: Build
