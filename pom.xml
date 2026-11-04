@@ -110,4 +110,21 @@
 
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>
+                https://maven.pkg.github.com/jm-trading-platform/trading-parent
+            </url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>github</id>
+            <url>
+                https://maven.pkg.github.com/jm-trading-platform/trading-parent
+            </url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
